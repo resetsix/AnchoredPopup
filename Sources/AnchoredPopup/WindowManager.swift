@@ -10,26 +10,37 @@ import SwiftUI
 @MainActor
 final class WindowManager {
 	static let shared = WindowManager()
-	private var newWindow: UIWindow?
+    private var windows: [String: UIWindow] = [:]
 
-	static func openNewWindow<Content: View>(content: ()->Content) {
+    static func openNewWindow<Content: View>(id: String, content: ()->Content) {
 		guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
 			print("No valid scene available")
 			return
 		}
 
+//        if shared.windows.contains(where: { $0.key == id }) {
+//            return
+//        }
+
+        print("openNewWindow", id)
 		let window = UIWindow(windowScene: scene)
 		window.backgroundColor = .clear
-		let controller = UIHostingController(rootView: content())
+		let controller = UIHostingController(rootView: content()
+            .environment(\.anchoredPopupDismiss) {
+                Task {
+                    await AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
+                }
+            })
 		controller.view.backgroundColor = .clear
 		window.rootViewController = controller
 		window.windowLevel = .alert + 1
 		window.makeKeyAndVisible()
-        shared.newWindow = window
+        shared.windows[id] = window
 	}
 
-    static func closeWindow() {
-        shared.newWindow?.isHidden = true
-        shared.newWindow = nil
+    static func closeWindow(id: String) {
+        print("closeWindow", id)
+        shared.windows[id]?.isHidden = true
+        shared.windows.removeValue(forKey: id)
 	}
 }

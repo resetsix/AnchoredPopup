@@ -7,36 +7,47 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B1858D62D51FD3A00625A0F /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1858D52D51FD3A00625A0F /* AnchoredPopup */; };
+		5B4929972D673CC9002D045E /* ChakraPetch-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */; };
 		5B87F2BB2D3FAE7600A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2BA2D3FAE7600A1D1FA /* AnchoredPopup */; };
 		5B87F2BE2D3FAEE400A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2BD2D3FAEE400A1D1FA /* AnchoredPopup */; };
 		5B87F2C12D3FB04A00A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2C02D3FB04A00A1D1FA /* AnchoredPopup */; };
 		5B87F2C42D3FB0D100A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2C32D3FB0D100A1D1FA /* AnchoredPopup */; };
+		5BACA4352D64806C0093E0CF /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5BACA4342D64806C0093E0CF /* AnchoredPopup */; };
+		5BACA4492D64808A0093E0CF /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA43A2D64808A0093E0CF /* IBMPlexMono-Regular.ttf */; };
+		5BACA44A2D64808A0093E0CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA43C2D64808A0093E0CF /* Preview Assets.xcassets */; };
+		5BACA44C2D64808A0093E0CF /* IBMPlexMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA4382D64808A0093E0CF /* IBMPlexMono-Bold.ttf */; };
+		5BACA44D2D64808A0093E0CF /* ChakraPetch-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA4362D64808A0093E0CF /* ChakraPetch-Medium.ttf */; };
+		5BACA44E2D64808A0093E0CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA4462D64808A0093E0CF /* Assets.xcassets */; };
+		5BACA44F2D64808A0093E0CF /* ChakraPetch-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA4372D64808A0093E0CF /* ChakraPetch-Regular.ttf */; };
+		5BACA4502D64808A0093E0CF /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BACA4392D64808A0093E0CF /* IBMPlexMono-Medium.ttf */; };
+		5BACA4512D64808A0093E0CF /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BACA4432D64808A0093E0CF /* Utils.swift */; };
+		5BACA4522D64808A0093E0CF /* AnchoredPopupExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BACA4452D64808A0093E0CF /* AnchoredPopupExampleApp.swift */; };
+		5BACA4532D64808A0093E0CF /* Popups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BACA43F2D64808A0093E0CF /* Popups.swift */; };
+		5BACA4542D64808A0093E0CF /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BACA43E2D64808A0093E0CF /* MainView.swift */; };
+		5BACA4552D64808A0093E0CF /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BACA4422D64808A0093E0CF /* FontUtils.swift */; };
+		5BACA4562D64808A0093E0CF /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BACA4402D64808A0093E0CF /* ProfileView.swift */; };
+		5BB5D7002D647EC900D26B4D /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5BB5D6FF2D647EC900D26B4D /* AnchoredPopup */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Light.ttf"; sourceTree = "<group>"; };
 		5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnchoredPopupExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BACA4362D64808A0093E0CF /* ChakraPetch-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Medium.ttf"; sourceTree = "<group>"; };
+		5BACA4372D64808A0093E0CF /* ChakraPetch-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Regular.ttf"; sourceTree = "<group>"; };
+		5BACA4382D64808A0093E0CF /* IBMPlexMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Bold.ttf"; sourceTree = "<group>"; };
+		5BACA4392D64808A0093E0CF /* IBMPlexMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Medium.ttf"; sourceTree = "<group>"; };
+		5BACA43A2D64808A0093E0CF /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; };
+		5BACA43C2D64808A0093E0CF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		5BACA43E2D64808A0093E0CF /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		5BACA43F2D64808A0093E0CF /* Popups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popups.swift; sourceTree = "<group>"; };
+		5BACA4402D64808A0093E0CF /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		5BACA4422D64808A0093E0CF /* FontUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUtils.swift; sourceTree = "<group>"; };
+		5BACA4432D64808A0093E0CF /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		5BACA4452D64808A0093E0CF /* AnchoredPopupExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnchoredPopupExampleApp.swift; sourceTree = "<group>"; };
+		5BACA4462D64808A0093E0CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5BACA4472D64808A0093E0CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5B4E1C612D40DE89000696FF /* Exceptions for "AnchoredPopupExample" folder in "AnchoredPopupExample" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 5B87F2A12D3FA2B300A1D1FA /* AnchoredPopupExample */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		5B87F2A42D3FA2B300A1D1FA /* AnchoredPopupExample */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				5B4E1C612D40DE89000696FF /* Exceptions for "AnchoredPopupExample" folder in "AnchoredPopupExample" target */,
-			);
-			path = AnchoredPopupExample;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		5B87F29F2D3FA2B300A1D1FA /* Frameworks */ = {
@@ -45,8 +56,11 @@
 			files = (
 				5B87F2BB2D3FAE7600A1D1FA /* AnchoredPopup in Frameworks */,
 				5B87F2C42D3FB0D100A1D1FA /* AnchoredPopup in Frameworks */,
+				5B1858D62D51FD3A00625A0F /* AnchoredPopup in Frameworks */,
 				5B87F2BE2D3FAEE400A1D1FA /* AnchoredPopup in Frameworks */,
+				5BACA4352D64806C0093E0CF /* AnchoredPopup in Frameworks */,
 				5B87F2C12D3FB04A00A1D1FA /* AnchoredPopup in Frameworks */,
+				5BB5D7002D647EC900D26B4D /* AnchoredPopup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,7 +70,7 @@
 		5B87F2992D3FA2B300A1D1FA = {
 			isa = PBXGroup;
 			children = (
-				5B87F2A42D3FA2B300A1D1FA /* AnchoredPopupExample */,
+				5BACA4482D64808A0093E0CF /* AnchoredPopupExample */,
 				5B87F2B62D3FAE1100A1D1FA /* Frameworks */,
 				5B87F2A32D3FA2B300A1D1FA /* Products */,
 			);
@@ -77,6 +91,60 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		5BACA43B2D64808A0093E0CF /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */,
+				5BACA4362D64808A0093E0CF /* ChakraPetch-Medium.ttf */,
+				5BACA4372D64808A0093E0CF /* ChakraPetch-Regular.ttf */,
+				5BACA4382D64808A0093E0CF /* IBMPlexMono-Bold.ttf */,
+				5BACA4392D64808A0093E0CF /* IBMPlexMono-Medium.ttf */,
+				5BACA43A2D64808A0093E0CF /* IBMPlexMono-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		5BACA43D2D64808A0093E0CF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				5BACA43C2D64808A0093E0CF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		5BACA4412D64808A0093E0CF /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				5BACA43E2D64808A0093E0CF /* MainView.swift */,
+				5BACA43F2D64808A0093E0CF /* Popups.swift */,
+				5BACA4402D64808A0093E0CF /* ProfileView.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		5BACA4442D64808A0093E0CF /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				5BACA4422D64808A0093E0CF /* FontUtils.swift */,
+				5BACA4432D64808A0093E0CF /* Utils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		5BACA4482D64808A0093E0CF /* AnchoredPopupExample */ = {
+			isa = PBXGroup;
+			children = (
+				5BACA43B2D64808A0093E0CF /* Fonts */,
+				5BACA43D2D64808A0093E0CF /* Preview Content */,
+				5BACA4412D64808A0093E0CF /* Screens */,
+				5BACA4442D64808A0093E0CF /* Utils */,
+				5BACA4452D64808A0093E0CF /* AnchoredPopupExampleApp.swift */,
+				5BACA4462D64808A0093E0CF /* Assets.xcassets */,
+				5BACA4472D64808A0093E0CF /* Info.plist */,
+			);
+			path = AnchoredPopupExample;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -92,15 +160,15 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				5B87F2A42D3FA2B300A1D1FA /* AnchoredPopupExample */,
-			);
 			name = AnchoredPopupExample;
 			packageProductDependencies = (
 				5B87F2BA2D3FAE7600A1D1FA /* AnchoredPopup */,
 				5B87F2BD2D3FAEE400A1D1FA /* AnchoredPopup */,
 				5B87F2C02D3FB04A00A1D1FA /* AnchoredPopup */,
 				5B87F2C32D3FB0D100A1D1FA /* AnchoredPopup */,
+				5B1858D52D51FD3A00625A0F /* AnchoredPopup */,
+				5BB5D6FF2D647EC900D26B4D /* AnchoredPopup */,
+				5BACA4342D64806C0093E0CF /* AnchoredPopup */,
 			);
 			productName = AnchoredPopupExample;
 			productReference = 5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */;
@@ -131,7 +199,7 @@
 			mainGroup = 5B87F2992D3FA2B300A1D1FA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5B87F2C22D3FB0D100A1D1FA /* XCLocalSwiftPackageReference "../../AnchoredPopup" */,
+				5BACA4332D64806C0093E0CF /* XCLocalSwiftPackageReference "../../AnchoredPopup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B87F2A32D3FA2B300A1D1FA /* Products */;
@@ -148,6 +216,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BACA4492D64808A0093E0CF /* IBMPlexMono-Regular.ttf in Resources */,
+				5BACA44A2D64808A0093E0CF /* Preview Assets.xcassets in Resources */,
+				5BACA44C2D64808A0093E0CF /* IBMPlexMono-Bold.ttf in Resources */,
+				5BACA44D2D64808A0093E0CF /* ChakraPetch-Medium.ttf in Resources */,
+				5B4929972D673CC9002D045E /* ChakraPetch-Light.ttf in Resources */,
+				5BACA44E2D64808A0093E0CF /* Assets.xcassets in Resources */,
+				5BACA44F2D64808A0093E0CF /* ChakraPetch-Regular.ttf in Resources */,
+				5BACA4502D64808A0093E0CF /* IBMPlexMono-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +234,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BACA4512D64808A0093E0CF /* Utils.swift in Sources */,
+				5BACA4522D64808A0093E0CF /* AnchoredPopupExampleApp.swift in Sources */,
+				5BACA4532D64808A0093E0CF /* Popups.swift in Sources */,
+				5BACA4542D64808A0093E0CF /* MainView.swift in Sources */,
+				5BACA4552D64808A0093E0CF /* FontUtils.swift in Sources */,
+				5BACA4562D64808A0093E0CF /* ProfileView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +373,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AnchoredPopupExample/Preview Content\"";
+				DEVELOPMENT_TEAM = FZXCM5CJ7P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AnchoredPopupExample/Info.plist;
@@ -320,6 +403,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AnchoredPopupExample/Preview Content\"";
+				DEVELOPMENT_TEAM = FZXCM5CJ7P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AnchoredPopupExample/Info.plist;
@@ -365,13 +449,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		5B87F2C22D3FB0D100A1D1FA /* XCLocalSwiftPackageReference "../../AnchoredPopup" */ = {
+		5BACA4332D64806C0093E0CF /* XCLocalSwiftPackageReference "../../AnchoredPopup" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../AnchoredPopup;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5B1858D52D51FD3A00625A0F /* AnchoredPopup */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnchoredPopup;
+		};
 		5B87F2BA2D3FAE7600A1D1FA /* AnchoredPopup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AnchoredPopup;
@@ -385,6 +473,14 @@
 			productName = AnchoredPopup;
 		};
 		5B87F2C32D3FB0D100A1D1FA /* AnchoredPopup */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnchoredPopup;
+		};
+		5BACA4342D64806C0093E0CF /* AnchoredPopup */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnchoredPopup;
+		};
+		5BB5D6FF2D647EC900D26B4D /* AnchoredPopup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AnchoredPopup;
 		};

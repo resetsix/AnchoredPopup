@@ -5,74 +5,165 @@
 //
 
 import SwiftUI
+import Combine
 
-public enum AnchoredPopupPosition {
-    case anchorRelative(point: UnitPoint) // popup view will be aligned to anchor view at corresponding proportion
-    case screenRelative(point: UnitPoint) // popup view will be aligned to whole screen
-}
+struct IntRect: Equatable {
+    var midX, midY, width, height: Int
+    var floatMidX: CGFloat { CGFloat(midX) }
+    var floatMidY: CGFloat { CGFloat(midY) }
+    var floatWidth: CGFloat { CGFloat(width) }
+    var floatHeight: CGFloat { CGFloat(height) }
 
-public extension View {
-    func useAsPopupAnchor<V: View>(id: String, duration: CGFloat = 0.3, position: AnchoredPopupPosition, @ViewBuilder contentBuilder: @escaping () -> V) -> some View {
-        self.modifier(TriggerButton(id: id, duration: duration, position: position, contentBuilder: contentBuilder))
+    static let zero = IntRect(midX: 0, midY: 0, width: 0, height: 0)
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.midX == rhs.midX
+        && lhs.midY == rhs.midY
+        && lhs.width == rhs.width
+        && lhs.height == rhs.height
     }
 }
 
-class AnchoredPopup {
-    @MainActor static func launchAnchoredAnimation(id: String) {
-        AnchoredAnimationManager.shared.changeStateForAnimation(id: id, state: .growing)
+extension CGRect {
+    func toIntRect() -> IntRect {
+        IntRect(midX: Int(midX), midY: Int(midY), width: Int(width), height: Int(height))
+    }
+}
+
+struct IntSize: Equatable {
+    var width, height: Int
+    var floatWidth: CGFloat { CGFloat(width) }
+    var floatHeight: CGFloat { CGFloat(height) }
+
+    static let zero = IntSize(width: 0, height: 0)
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.width == rhs.width
+        && lhs.height == rhs.height
+    }
+}
+
+extension CGSize {
+    func toIntSize() -> IntSize {
+        IntSize(width: Int(width), height: Int(height))
     }
 }
 
 /// this manager stores states for all the paired growing/shrinking animations
-fileprivate class AnchoredAnimationManager: ObservableObject {
-    @MainActor static let shared = AnchoredAnimationManager()
+@MainActor
+class AnchoredAnimationManager: ObservableObject {
+    static let shared = AnchoredAnimationManager()
 
     enum GrowingViewState {
         case hidden, growing, displayed, shrinking
     }
 
-    struct AnimationItem {
+    struct AnimationItem: Equatable {
         var id: String
-        var buttonFrame: CGRect
+        var buttonFrame: IntRect
         var state: GrowingViewState
+
+        static func == (lhs: AnimationItem, rhs: AnimationItem) -> Bool {
+            lhs.id == rhs.id
+            && lhs.buttonFrame == rhs.buttonFrame
+            && lhs.state == rhs.state
+        }
     }
 
     @Published var animations: [AnimationItem] = []
+    @Published var publishers: [String: CurrentValueSubject<AnimationItem?, Never>] = [:]
 
-    func changeStateForAnimation(id: String, state: GrowingViewState) {
+    private let queue = DispatchQueue(label: "anchored_animation_manager_queue", attributes: .concurrent)
+    private var cancellables = Set<AnyCancellable>()
+
+//    func changeStateForAnimation(for id: String, state: GrowingViewState) {
+//        queue.async {
+//            Task {
+//                await self._changeStateForAnimation(id: id, state: state)
+//            }
+//        }
+//    }
+
+    func changeStateForAnimation(for id: String, state: GrowingViewState) {
         if let index = animations.firstIndex(where: { $0.id == id }) {
             animations[index].state = state
         }
     }
 
+//    func updateFrame(for id: String, frame: CGRect) {
+//        queue.async {
+//            Task {
+//                await self._updateFrame(id: id, frame: frame)
+//            }
+//        }
+//    }
+
     func updateFrame(for id: String, frame: CGRect) {
         if let index = animations.firstIndex(where: { $0.id == id }) {
-            animations[index].buttonFrame = frame
+            animations[index].buttonFrame = frame.toIntRect()
         } else {
-            animations.append(AnimationItem(id: id, buttonFrame: frame, state: .hidden))
+            animations.append(AnimationItem(id: id, buttonFrame: frame.toIntRect(), state: .hidden))
         }
     }
-}
 
-fileprivate struct ButtonFrameInfo: Equatable {
-    let id: String
-    let frame: CGRect
-}
+//    func subscribeToAnimation(with id: String, onUpdate: @escaping @Sendable (AnimationItem) -> Void) {
+//        publisher(for: id)
+//            .sink { animation in
+//                onUpdate(animation)
+//            }
+//            .store(in: &cancellables)
+//    }
 
-fileprivate struct ButtonFramePreferenceKey: PreferenceKey {
-    typealias Value = ButtonFrameInfo
-    static let defaultValue: ButtonFrameInfo = ButtonFrameInfo(id: "", frame: .zero)
+    func publisher(for id: String) -> CurrentValueSubject<AnimationItem?, Never> {
+        if let publisher = publishers[id] {
+            return publisher
+        }
 
-    static func reduce(value: inout ButtonFrameInfo, nextValue: () -> ButtonFrameInfo) {
-        value = nextValue()
+        // Track the last emitted value for comparison
+        var lastValue: AnimationItem? = nil
+
+        // Create a CurrentValueSubject to hold the current value
+        let subject = CurrentValueSubject<AnimationItem?, Never>(nil)
+
+        // Generate the publisher and handle state changes
+        $animations
+            .map { animations in
+                // Find the item based on the ID
+                return animations.first { $0.id == id }
+            }
+            .compactMap { $0 }
+            .filter { newItem in
+                if let last = lastValue {
+                    // Only emit if the item has changed from the last value
+                    if last != newItem {
+                        lastValue = newItem // Update the last value
+                        return true // Emit if there's a change
+                    } else {
+                        return false // Don't emit if no change
+                    }
+                } else {
+                    lastValue = newItem // Set initial value
+                    return true // Emit the first time
+                }
+            }
+            .sink { newItem in
+                // Emit the value to the CurrentValueSubject
+                subject.send(newItem)
+            }
+            .store(in: &cancellables)
+
+        publishers[id] = subject
+        return subject
     }
+
 }
 
-fileprivate struct TriggerButton<V>: ViewModifier where V: View {
+struct TriggerButton<V>: ViewModifier where V: View {
     var id: String
-    var duration: CGFloat
-    var position: AnchoredPopupPosition
+    var params: PopupParameters
     @ViewBuilder var contentBuilder: () -> V
+
+    @State private var cancellable: AnyCancellable?
 
     func body(content: Content) -> some View {
         content
@@ -84,83 +175,54 @@ fileprivate struct TriggerButton<V>: ViewModifier where V: View {
                 TapGesture().onEnded { gesture in
                     // trigger displaying animation
                     hideKeyboard()
-                    AnchoredAnimationManager.shared.changeStateForAnimation(id: id, state: .growing)
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .growing)
                 }
             )
             .onPreferenceChange(ButtonFramePreferenceKey.self) { value in
-                AnchoredAnimationManager.shared.updateFrame(for: value.id, frame: value.frame)
+                if id == value.id {
+                    AnchoredAnimationManager.shared.updateFrame(for: value.id, frame: value.frame)
+                }
             }
-            .onReceive(AnchoredAnimationManager.shared.$animations) { animations in
-                if let animation = animations.first(where: { $0.id == id }) {
-                    if animation.state == .growing {
-                        WindowManager.openNewWindow {
-                            ZStack {
-                                AnimatedBackgroundView(id: id)
-                                AnchoredAnimationView(id: id, duration: duration, position: position, contentBuilder: contentBuilder)
-                            }
-                            .fullTap {
-                                // trigger hiding animation
-                                AnchoredAnimationManager.shared.changeStateForAnimation(id: id, state: .shrinking)
-                            }
+            .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
+                print("onReceive", animation, "\n")
+                if animation?.state == .growing {
+                    WindowManager.openNewWindow(id: id) {
+                        ZStack {
+                            AnimatedBackgroundView(id: id)
+                                .fullTap {
+                                    if params.closeOnTapOutside {
+                                        // trigger hiding animation
+                                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
+                                    }
+                                }
+                            AnchoredAnimationView(id: id, params: params, contentBuilder: contentBuilder)
                         }
-                    } else if animation.state == .hidden {
-                        WindowManager.closeWindow()
                     }
+                } else if animation?.state == .hidden {
+                    WindowManager.closeWindow(id: id)
                 }
             }
-    }
-}
-
-fileprivate struct AnimatedBackgroundView: View {
-    var id: String
-
-    @State private var animatableOpacity: CGFloat = 0
-
-    var body: some View {
-        Color.black.opacity(0.3)
-            .background(Blur(radius: 6))
-            .ignoresSafeArea()
-            .opacity(animatableOpacity)
-            .onReceive(AnchoredAnimationManager.shared.$animations) { animations in
-                if let animation = animations.first(where: { $0.id == id }) {
-                    setupAndLaunchAnimation(animation)
-                }
-            }
-    }
-
-    private func setupAndLaunchAnimation(_ animation: AnchoredAnimationManager.AnimationItem) {
-        DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                if animation.state == .growing {
-                    setDisplayedState()
-                } else if animation.state == .shrinking {
-                    setHiddenState()
-                }
-            }
-        }
-    }
-
-    private func setHiddenState() {
-        animatableOpacity = 0
-    }
-
-    private func setDisplayedState() {
-        animatableOpacity = 1
+//            .task {
+//                await AnchoredAnimationManager.shared.subscribeToAnimation(with: id) { animation in
+//                    DispatchQueue.main.async {
+//
+//                    }
+//                }
+//            }
     }
 }
 
 fileprivate struct AnchoredAnimationView<V>: View where V: View {
     var id: String
-    var duration: CGFloat
-    var position: AnchoredPopupPosition
+    var params: PopupParameters
     var contentBuilder: () -> V
 
     @State private var animatableOpacity: CGFloat = 0
     @State private var animatableScale: CGSize = .zero
     @State private var animatableOffset: CGSize = .zero
 
-    @State private var triggerButtonFrame: CGRect = .zero
-    @State private var contentSize: CGSize = .zero
+    @State private var triggerButtonFrame: IntRect = .zero
+    @State private var contentSize: IntSize = .zero
 
     var body: some View {
         VStack {
@@ -168,7 +230,7 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
                 .background(GeometryReader { geo in
                     Color.clear.onAppear {
                         DispatchQueue.main.async {
-                            contentSize = geo.size
+                            contentSize = geo.size.toIntSize()
                             if let animation = AnchoredAnimationManager.shared.animations.first(where: { $0.id == id }) {
                                 setupAndLaunchAnimation(animation)
                             }
@@ -177,23 +239,21 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
                 })
                 .scaleEffect(animatableScale)
                 .offset(animatableOffset)
-                .position(x: triggerButtonFrame.midX, y: triggerButtonFrame.midY)
+                .position(x: triggerButtonFrame.floatMidX, y: triggerButtonFrame.floatMidY)
                 .opacity(animatableOpacity)
                 .ignoresSafeArea()
                 .simultaneousGesture(
                     TapGesture().onEnded { gesture in
-                        // trigger hiding animation
-                        AnchoredAnimationManager.shared.changeStateForAnimation(id: id, state: .shrinking)
+                        if params.closeOnTap {
+                            // trigger hiding animation
+                            AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
+                        }
                     }
                 )
         }
-        .onReceive(AnchoredAnimationManager.shared.$animations) { animations in
-            if let animation = animations.first(where: { $0.id == id }) {
-                setupAndLaunchAnimation(animation)
-            }
-        }
-        .onAppear {
-            if let animation = AnchoredAnimationManager.shared.animations.first(where: { $0.id == id }) {
+        .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
+            print("setupAndLaunchAnimation", animation, "\n")
+            if let animation {
                 setupAndLaunchAnimation(animation)
             }
         }
@@ -201,6 +261,7 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
 
     private func setupAndLaunchAnimation(_ animation: AnchoredAnimationManager.AnimationItem) {
         if contentSize == .zero { return }
+
         if triggerButtonFrame == .zero { // initial setup, and contentSize is ready
             DispatchQueue.main.async {
                 triggerButtonFrame = animation.buttonFrame
@@ -210,27 +271,25 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
 
         DispatchQueue.main.async {
             if animation.state == .growing {
-                withAnimation(Animation.easeInOut(duration: duration)) {
+                withAnimation(params.animation) {
                     setDisplayedState()
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-                    AnchoredAnimationManager.shared.changeStateForAnimation(id: id, state: .displayed)
+                } completion: {
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
                 }
             } else if animation.state == .shrinking {
-                withAnimation(Animation.easeInOut(duration: duration)) {
+                withAnimation(params.animation) {
                     setHiddenState()
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+                } completion: {
                     // let the manager know that the animation is finished, this means that transparant sheet can be dismissed
-                    AnchoredAnimationManager.shared.changeStateForAnimation(id: id, state: .hidden)
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
                 }
             }
         }
     }
 
     private func setHiddenState() {
-        animatableOffset = calculateHiddenOffset()
-        animatableScale = .zero
+        animatableOffset = .zero
+        animatableScale = calculateHiddenScale()
         animatableOpacity = 0
     }
 
@@ -240,61 +299,52 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
         animatableOpacity = 1
     }
 
-    private func calculateHiddenOffset() -> CGSize {
-        switch position {
+    /// start with popup matching trigger's position and size
+    private func calculateHiddenScale() -> CGSize {
+        let tw = triggerButtonFrame.floatWidth
+        let th = triggerButtonFrame.floatHeight
+        let pw = contentSize.floatWidth
+        let ph = contentSize.floatHeight
+        return CGSize(width: tw/pw, height: th/ph)
+    }
+
+    /// starting position is center of the trigger
+    private func calculateDisplayedOffset() -> CGSize {
+        let cw = contentSize.floatWidth
+        let ch = contentSize.floatHeight
+
+        switch params.position {
         case .anchorRelative(let p):
-            let tw = triggerButtonFrame.width
-            let th = triggerButtonFrame.height
+            let tw = triggerButtonFrame.floatWidth
+            let th = triggerButtonFrame.floatHeight
 
-            let w = -tw/2
-            let h = -th/2
+            // difference between centers
+            let w = cw/2 - tw/2
+            let h = ch/2 - th/2
 
+            // normalization: (0, 1) -> (1, -1)
             let px = -2 * p.x + 1
             let py = -2 * p.y + 1
 
+            // the content view center is currently same as anchor view
+            // +/- the difference between centers
             return CGSize(width: w * px, height: h * py)
 
-        case .screenRelative:
-            return .zero
-        }
-    }
-
-    private func calculateDisplayedOffset() -> CGSize {
-        let point: UnitPoint
-        let tx, ty, tw, th: CGFloat
-
-        switch position {
-        case .anchorRelative(let p):
-            point = p
-            tx = triggerButtonFrame.midX
-            ty = triggerButtonFrame.midY
-            tw = triggerButtonFrame.width
-            th = triggerButtonFrame.height
         case .screenRelative(let p):
-            point = p
-            tx = UIScreen.main.bounds.midX
-            ty = UIScreen.main.bounds.midY
-            tw = UIScreen.main.bounds.width
-            th = UIScreen.main.bounds.height
+            let tx = triggerButtonFrame.floatMidX
+            let ty = triggerButtonFrame.floatMidY
+            let sw = UIScreen.main.bounds.width
+            let sh = UIScreen.main.bounds.height
+
+            // normalization: (0, 1) -> (1, -1)
+            let px = -2 * p.x + 1
+            let py = -2 * p.y + 1
+
+            // the content view center is currently same as anchor view
+            // -tx: put middle of popup into (0,0)
+            // sw * p.x: put middle of popup into required unit point of screen
+            // cw/2 * px: align required unit point of popup with the screen
+            return CGSize(width: -tx + sw * p.x + cw/2 * px, height: -ty + sh * p.y + ch/2 * py)
         }
-
-        let cw = contentSize.width
-        let ch = contentSize.height
-
-        // difference between centers
-        let w = cw/2 - tw/2
-        let h = ch/2 - th/2
-
-        // .topLeading UnitPoint: (0, 0)
-        // (tx + x, ty + y)
-        // .topTrailing UnitPoint: (1, 0)
-        // (tx - x, ty + y) etc.
-        // normalization: (0, 1) -> (1, -1)
-        let px = -2 * point.x + 1
-        let py = -2 * point.y + 1
-
-        // the content view center is currently same as anchor view
-        // +/- the difference between centers
-        return CGSize(width: w * px, height: h * py)
     }
 }

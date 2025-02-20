@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Text {
+extension View {
     func chakra(_ size: CGFloat, _ color: Color = .black) -> some View {
         self.font(.custom("ChakraPetch-Regular", size: size))
             .foregroundStyle(color)
@@ -15,6 +15,10 @@ extension Text {
 
     func chakraMedium(_ size: CGFloat, _ color: Color = .black) -> some View {
         self.font(.custom("ChakraPetch-Medium", size: size))
+            .foregroundStyle(color)
+    }
+    func chakraLight(_ size: CGFloat, _ color: Color = .black) -> some View {
+        self.font(.custom("ChakraPetch-Light", size: size))
             .foregroundStyle(color)
     }
 

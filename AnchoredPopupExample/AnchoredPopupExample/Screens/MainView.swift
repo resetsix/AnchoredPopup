@@ -11,45 +11,57 @@ import AnchoredPopup
 struct MainView: View {
 
     var body: some View {
-        ZStack {
-            mainView
-            
-            VStack {
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                content
+            }
+
+            HStack {
+                Circle().foregroundStyle(.popupViolet)
+                    .overlay {
+                        Image(.mainPlay)
+                    }
+                    .size(60)
+                    .useAsPopupAnchor(id: "main_menu") {
+                        MainMenuView()
+                    } customize: {
+                        $0.position(.anchorRelative(point: .bottomLeading))
+                    }
+                
                 Spacer()
-                HStack {
-                    Circle().foregroundStyle(.popupViolet)
-                        .overlay {
-                            Image(.mainPlay)
-                        }
-                        .size(60)
-                        .useAsPopupAnchor(id: "mainMenu", position: .anchorRelative(point: .bottomLeading)) {
-                            MainMenuView()
-                        }
-
-                    Spacer()
-
-                    Circle().foregroundStyle(RadialGradient(colors: [.popupYellow, .popupYellow2], center: .center, startRadius: 0, endRadius: 30))
-                        .overlay {
-                            Image(.mainTrophy)
-                        }
-                        .size(60)
-                }
+                
+                Circle().foregroundStyle(RadialGradient(colors: [.popupYellow, .popupYellow2], center: .center, startRadius: 0, endRadius: 30))
+                    .overlay {
+                        Image(.mainTrophy)
+                    }
+                    .size(60)
+                    .useAsPopupAnchor(id: "congratulations_view") {
+                        CongratulationsView()
+                    } customize: {
+                        $0.position(.screenRelative())
+                            .closeOnTap(false)
+                    }
             }
             .padding(16)
         }
     }
 
-    var mainView: some View {
+    var content: some View {
         VStack(spacing: 16) {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Today").plexMedium(16, .popupViolet)
-                    Text("Sat, 23 April 🌟 ").chakraMedium(24)
+                    Text("Sat, 23 April 🌟").chakraMedium(24)
                 }
 
                 Spacer()
 
                 Image(.avatar)
+                    .useAsPopupAnchor(id: "profile_view") {
+                        ProfileView()
+                    } customize: {
+                        $0.closeOnTap(false)
+                    }
                     .overlay(alignment: .topTrailing) {
                         Circle().styled(.popupViolet, border: .white, 4)
                             .size(16)
