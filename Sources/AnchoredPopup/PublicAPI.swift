@@ -37,8 +37,20 @@ public class AnchoredPopup {
 // - MARK: Customization parameters
 
 public enum AnchoredPopupPosition {
-    case anchorRelative(point: UnitPoint) // popup view will be aligned to anchor view at corresponding proportion
-    case screenRelative(point: UnitPoint = .center) // popup view will be aligned to whole screen
+    case anchorRelative(_ point: UnitPoint) // popup view will be aligned to anchor view at corresponding proportion
+    case screenRelative(_ point: UnitPoint = .center) // popup view will be aligned to whole screen
+}
+
+public enum AnchoredPopupBackground {
+    case none
+    case color(Color)
+    case blur(radius: CGFloat = 6)
+    case view(AnyView)
+
+    // Convenience initializer for `view` that automatically wraps the content in `AnyView`
+    public init<Content: View>(viewBuilder: @escaping () -> Content) {
+        self = .view(AnyView(viewBuilder()))
+    }
 }
 
 public struct PopupParameters {
@@ -51,12 +63,18 @@ public struct PopupParameters {
     /// Should close on tap anywhere outside of the popup
     var closeOnTapOutside: Bool = false
 
+    /// Should taps pass through the popup's background
+    var isPassthrough: Bool = false
+
+    var background: AnchoredPopupBackground = .blur()
+
     public func position(_ position: AnchoredPopupPosition) -> PopupParameters {
         var params = self
         params.position = position
         return params
     }
 
+    /// Appear/disappear animation - default is `easeOut`
     public func animation(_ animation: Animation) -> PopupParameters {
         var params = self
         params.animation = animation
@@ -74,6 +92,20 @@ public struct PopupParameters {
     public func closeOnTapOutside(_ closeOnTapOutside: Bool) -> PopupParameters {
         var params = self
         params.closeOnTapOutside = closeOnTapOutside
+        return params
+    }
+
+    /// Should taps pass through the popup's background - default is `false`
+    public func isBackgroundPassthrough(_ isPassthrough: Bool) -> PopupParameters {
+        var params = self
+        params.isPassthrough = isPassthrough
+        return params
+    }
+
+    /// Background for popup - default is `.blur`
+    public func background(_ background: AnchoredPopupBackground) -> PopupParameters {
+        var params = self
+        params.background = background
         return params
     }
 }

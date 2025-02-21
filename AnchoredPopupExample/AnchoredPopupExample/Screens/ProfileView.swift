@@ -34,8 +34,9 @@ struct ProfileView: View {
                         .useAsPopupAnchor(id: "send_invite") {
                             InviteView()
                         } customize: {
-                            $0.position(.screenRelative(point: .bottomTrailing))
+                            $0.position(.screenRelative(.bottomTrailing))
                                 .closeOnTap(false)
+                                .background(.color(.black.opacity(0.4)))
                         }
 
                     Spacer()
@@ -48,7 +49,9 @@ struct ProfileView: View {
                         .useAsPopupAnchor(id: "questions_view") {
                             QuestionsView()
                         } customize: {
-                            $0.position(.anchorRelative(point: .bottomTrailing))
+                            $0.position(.anchorRelative(.bottomTrailing))
+                                .background(.none)
+                                .isBackgroundPassthrough(true)
                         }
                 }
                 .padding(16)
@@ -74,7 +77,7 @@ struct ProfileView: View {
                 HStack(spacing: 12) {
                     profileButton(.profileWorkout, "Workout plan")
                     profileButton(.profileFavorites, "Favourites")
-                } 
+                }
 
                 Spacer()
 

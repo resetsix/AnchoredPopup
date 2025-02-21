@@ -38,19 +38,30 @@ struct ButtonFramePreferenceKey: PreferenceKey {
 
 struct AnimatedBackgroundView: View {
     var id: String
+    var background: AnchoredPopupBackground
 
     @State private var animatableOpacity: CGFloat = 0
 
     var body: some View {
-        Color.black.opacity(0.3)
-            .background(Blur(radius: 6))
-            .ignoresSafeArea()
-            .opacity(animatableOpacity)
-            .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
-                if let animation {
-                    setupAndLaunchAnimation(animation)
-                }
+        Group {
+            switch background {
+            case .none:
+                EmptyView()
+            case .color(let color):
+                color
+            case .blur(let radius):
+                Blur(radius: radius)
+            case .view(let anyView):
+                anyView
             }
+        }
+        .ignoresSafeArea()
+        .opacity(animatableOpacity)
+        .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
+            if let animation {
+                setupAndLaunchAnimation(animation)
+            }
+        }
     }
 
     private func setupAndLaunchAnimation(_ animation: AnchoredAnimationManager.AnimationItem) {

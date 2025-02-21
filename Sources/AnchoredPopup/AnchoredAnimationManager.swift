@@ -71,18 +71,9 @@ class AnchoredAnimationManager: ObservableObject {
     }
 
     @Published var animations: [AnimationItem] = []
-    @Published var publishers: [String: CurrentValueSubject<AnimationItem?, Never>] = [:]
 
-    private let queue = DispatchQueue(label: "anchored_animation_manager_queue", attributes: .concurrent)
+    private var publishers: [String: CurrentValueSubject<AnimationItem?, Never>] = [:]
     private var cancellables = Set<AnyCancellable>()
-
-//    func changeStateForAnimation(for id: String, state: GrowingViewState) {
-//        queue.async {
-//            Task {
-//                await self._changeStateForAnimation(id: id, state: state)
-//            }
-//        }
-//    }
 
     func changeStateForAnimation(for id: String, state: GrowingViewState) {
         if let index = animations.firstIndex(where: { $0.id == id }) {
@@ -90,29 +81,13 @@ class AnchoredAnimationManager: ObservableObject {
         }
     }
 
-//    func updateFrame(for id: String, frame: CGRect) {
-//        queue.async {
-//            Task {
-//                await self._updateFrame(id: id, frame: frame)
-//            }
-//        }
-//    }
-
-    func updateFrame(for id: String, frame: CGRect) {
+   func updateFrame(for id: String, frame: CGRect) {
         if let index = animations.firstIndex(where: { $0.id == id }) {
             animations[index].buttonFrame = frame.toIntRect()
         } else {
             animations.append(AnimationItem(id: id, buttonFrame: frame.toIntRect(), state: .hidden))
         }
     }
-
-//    func subscribeToAnimation(with id: String, onUpdate: @escaping @Sendable (AnimationItem) -> Void) {
-//        publisher(for: id)
-//            .sink { animation in
-//                onUpdate(animation)
-//            }
-//            .store(in: &cancellables)
-//    }
 
     func publisher(for id: String) -> CurrentValueSubject<AnimationItem?, Never> {
         if let publisher = publishers[id] {
@@ -128,8 +103,7 @@ class AnchoredAnimationManager: ObservableObject {
         // Generate the publisher and handle state changes
         $animations
             .map { animations in
-                // Find the item based on the ID
-                return animations.first { $0.id == id }
+                animations.first { $0.id == id }
             }
             .compactMap { $0 }
             .filter { newItem in
@@ -155,7 +129,6 @@ class AnchoredAnimationManager: ObservableObject {
         publishers[id] = subject
         return subject
     }
-
 }
 
 struct TriggerButton<V>: ViewModifier where V: View {
@@ -184,17 +157,18 @@ struct TriggerButton<V>: ViewModifier where V: View {
                 }
             }
             .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
-                print("onReceive", animation, "\n")
                 if animation?.state == .growing {
-                    WindowManager.openNewWindow(id: id) {
+                    WindowManager.openNewWindow(id: id, isPassthrough: params.isPassthrough) {
                         ZStack {
-                            AnimatedBackgroundView(id: id)
-                                .fullTap {
-                                    if params.closeOnTapOutside {
-                                        // trigger hiding animation
-                                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
+                            AnimatedBackgroundView(id: id, background: params.background)
+                                .simultaneousGesture(
+                                    TapGesture().onEnded {
+                                        if params.closeOnTapOutside {
+                                            // trigger hiding animation
+                                            AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
+                                        }
                                     }
-                                }
+                                )
                             AnchoredAnimationView(id: id, params: params, contentBuilder: contentBuilder)
                         }
                     }
@@ -252,7 +226,6 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
                 )
         }
         .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
-            print("setupAndLaunchAnimation", animation, "\n")
             if let animation {
                 setupAndLaunchAnimation(animation)
             }

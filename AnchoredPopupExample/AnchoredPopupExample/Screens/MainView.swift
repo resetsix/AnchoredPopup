@@ -10,6 +10,8 @@ import AnchoredPopup
 
 struct MainView: View {
 
+    @State var name = "Mike"
+
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
@@ -25,7 +27,10 @@ struct MainView: View {
                     .useAsPopupAnchor(id: "main_menu") {
                         MainMenuView()
                     } customize: {
-                        $0.position(.anchorRelative(point: .bottomLeading))
+                        $0.position(.anchorRelative(.bottomLeading))
+                            .background(.none)
+                            .isBackgroundPassthrough(true)
+                            .closeOnTap(false)
                     }
                 
                 Spacer()
