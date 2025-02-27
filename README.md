@@ -45,23 +45,23 @@ Customized example:
 ```
 
 ### Required parameters - useAsPopupAnchor 
-- `id` - A unique 'String' to store everything related to this animation, you can use it to manually launch animations using this func `AnchoredPopup.launchAnchoredAnimation`    
+- `id` - A unique `String` to store everything related to this animation, you can use it to manually launch animations using this func `AnchoredPopup.launchAnchoredAnimation`    
 - `contentBuilder` - popup body builder
 
 ### Optional parameters
-- `position` - a 'UnitPoint' to align with 'UnitPoint'-th part of anchor view. Could be an `anchorRelative` or `screenRelative` 'UnitPoint'   
+- `position` - a `UnitPoint` to align with `UnitPoint`-th part of anchor view. Could be an `anchorRelative` or `screenRelative` 'UnitPoint'   
 - `animation` - appear/disappear animation   
 - `closeOnTap` - enable/disable closing on tap on popup    
 - `closeOnTapOutside` - enable/disable closing on tap on popup's background     
 - `isBackgroundPassthrough` - enable/disable taps passing through the popup's background     
 - `background` - Available options are:     
-    * .none
-    * .color(Color)     
-    * .blur(radius: CGFloat) - blurred fullscreen overlay    
-    * .view(AnyView) - custom view builder   
+    * `.none`
+    * `.color(Color)`    
+    * `.blur(radius: CGFloat)` - blurred fullscreen overlay    
+    * `.view(AnyView)` - custom view builder   
 
 ## State management pitfall
-AnchoredPopup uses UIWindow to display itself above anything you might have on screen, so remember - to get adequate UI updates, use ObservableObjects or @Bindings instead of @State. This won't work:
+AnchoredPopup uses `UIWindow` to display itself above anything you might have on screen, so remember - to get adequate UI updates, use `ObservableObjects` or `@Bindings` instead of `@State`. This won't work:
 ```swift
 struct MainView: View {
     @State var name = "Mike"
