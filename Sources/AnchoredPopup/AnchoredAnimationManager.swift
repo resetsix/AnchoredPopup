@@ -7,48 +7,6 @@
 import SwiftUI
 import Combine
 
-struct IntRect: Equatable {
-    var midX, midY, width, height: Int
-    var floatMidX: CGFloat { CGFloat(midX) }
-    var floatMidY: CGFloat { CGFloat(midY) }
-    var floatWidth: CGFloat { CGFloat(width) }
-    var floatHeight: CGFloat { CGFloat(height) }
-
-    static let zero = IntRect(midX: 0, midY: 0, width: 0, height: 0)
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.midX == rhs.midX
-        && lhs.midY == rhs.midY
-        && lhs.width == rhs.width
-        && lhs.height == rhs.height
-    }
-}
-
-extension CGRect {
-    func toIntRect() -> IntRect {
-        IntRect(midX: Int(midX), midY: Int(midY), width: Int(width), height: Int(height))
-    }
-}
-
-struct IntSize: Equatable {
-    var width, height: Int
-    var floatWidth: CGFloat { CGFloat(width) }
-    var floatHeight: CGFloat { CGFloat(height) }
-
-    static let zero = IntSize(width: 0, height: 0)
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.width == rhs.width
-        && lhs.height == rhs.height
-    }
-}
-
-extension CGSize {
-    func toIntSize() -> IntSize {
-        IntSize(width: Int(width), height: Int(height))
-    }
-}
-
 /// this manager stores states for all the paired growing/shrinking animations
 @MainActor
 class AnchoredAnimationManager: ObservableObject {
@@ -72,8 +30,13 @@ class AnchoredAnimationManager: ObservableObject {
 
     @Published var animations: [AnimationItem] = []
 
-    private var publishers: [String: CurrentValueSubject<AnimationItem?, Never>] = [:]
+    private var statePublishers: [String: CurrentValueSubject<AnimationItem?, Never>] = [:]
+    private var framePublishers: [String: CurrentValueSubject<AnimationItem?, Never>] = [:]
     private var cancellables = Set<AnyCancellable>()
+
+    static subscript(id: String) -> AnimationItem? {
+        shared.animations.first { $0.id == id }
+    }
 
     func changeStateForAnimation(for id: String, state: GrowingViewState) {
         if let index = animations.firstIndex(where: { $0.id == id }) {
@@ -89,8 +52,8 @@ class AnchoredAnimationManager: ObservableObject {
         }
     }
 
-    func publisher(for id: String) -> CurrentValueSubject<AnimationItem?, Never> {
-        if let publisher = publishers[id] {
+    func statePublisher(for id: String) -> CurrentValueSubject<AnimationItem?, Never> {
+        if let publisher = statePublishers[id] {
             return publisher
         }
 
@@ -109,7 +72,7 @@ class AnchoredAnimationManager: ObservableObject {
             .filter { newItem in
                 if let last = lastValue {
                     // Only emit if the item has changed from the last value
-                    if last != newItem {
+                    if last.state != newItem.state {
                         lastValue = newItem // Update the last value
                         return true // Emit if there's a change
                     } else {
@@ -126,13 +89,54 @@ class AnchoredAnimationManager: ObservableObject {
             }
             .store(in: &cancellables)
 
-        publishers[id] = subject
+        statePublishers[id] = subject
+        return subject
+    }
+
+    func framePublisher(for id: String) -> CurrentValueSubject<AnimationItem?, Never> {
+        if let publisher = framePublishers[id] {
+            return publisher
+        }
+
+        // Track the last emitted value for comparison
+        var lastValue: AnimationItem? = nil
+
+        // Create a CurrentValueSubject to hold the current value
+        let subject = CurrentValueSubject<AnimationItem?, Never>(nil)
+
+        // Generate the publisher and handle state changes
+        $animations
+            .map { animations in
+                animations.first { $0.id == id }
+            }
+            .compactMap { $0 }
+            .filter { newItem in
+                if let last = lastValue {
+                    // Only emit if the item has changed from the last value
+                    if last.buttonFrame != newItem.buttonFrame {
+                        lastValue = newItem // Update the last value
+                        return true // Emit if there's a change
+                    } else {
+                        return false // Don't emit if no change
+                    }
+                } else {
+                    lastValue = newItem // Set initial value
+                    return true // Emit the first time
+                }
+            }
+            .sink { newItem in
+                // Emit the value to the CurrentValueSubject
+                subject.send(newItem)
+            }
+            .store(in: &cancellables)
+
+        framePublishers[id] = subject
         return subject
     }
 }
 
 struct TriggerButton<V>: ViewModifier where V: View {
-    var id: String
+    @State var id: String
     var params: PopupParameters
     @ViewBuilder var contentBuilder: () -> V
 
@@ -140,10 +144,19 @@ struct TriggerButton<V>: ViewModifier where V: View {
 
     func body(content: Content) -> some View {
         content
-            .background(GeometryReader { geo in
-                Color.clear
-                    .preference(key: ButtonFramePreferenceKey.self, value: ButtonFrameInfo(id: id, frame: geo.frame(in: .global)))
-            })
+            .overlay {
+                GeometryReader { geo in
+                    Color.clear
+                        .preference(key: ButtonFramePreferenceKey.self, value: ButtonFrameInfo(id: id, frame: geo.frame(in: .global)))
+                }
+            }
+            .onPreferenceChange(ButtonFramePreferenceKey.self) { value in
+                DispatchQueue.main.async {
+                    if id == value.id {
+                        AnchoredAnimationManager.shared.updateFrame(for: value.id, frame: value.frame)
+                    }
+                }
+            }
             .simultaneousGesture(
                 TapGesture().onEnded { gesture in
                     // trigger displaying animation
@@ -151,18 +164,11 @@ struct TriggerButton<V>: ViewModifier where V: View {
                     AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .growing)
                 }
             )
-            .onPreferenceChange(ButtonFramePreferenceKey.self) { value in
-                if id == value.id {
-                    DispatchQueue.main.async {
-                        AnchoredAnimationManager.shared.updateFrame(for: value.id, frame: value.frame)
-                    }
-                }
-            }
-            .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
+            .onReceive(AnchoredAnimationManager.shared.statePublisher(for: id)) { animation in
                 if animation?.state == .growing {
                     WindowManager.openNewWindow(id: id, isPassthrough: params.isPassthrough) {
                         ZStack {
-                            AnimatedBackgroundView(id: id, background: params.background)
+                            AnimatedBackgroundView(id: $id, background: params.background)
                                 .simultaneousGesture(
                                     TapGesture().onEnded {
                                         if params.closeOnTapOutside {
@@ -178,13 +184,6 @@ struct TriggerButton<V>: ViewModifier where V: View {
                     WindowManager.closeWindow(id: id)
                 }
             }
-//            .task {
-//                await AnchoredAnimationManager.shared.subscribeToAnimation(with: id) { animation in
-//                    DispatchQueue.main.async {
-//
-//                    }
-//                }
-//            }
     }
 }
 
@@ -200,10 +199,12 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
     @State private var triggerButtonFrame: IntRect = .zero
     @State private var contentSize: IntSize = .zero
 
+    @State private var semaphore = DispatchSemaphore(value: 1)
+
     var body: some View {
         VStack {
             contentBuilder()
-                .background(GeometryReader { geo in
+                .overlay(GeometryReader { geo in
                     Color.clear.onAppear {
                         DispatchQueue.main.async {
                             contentSize = geo.size.toIntSize()
@@ -227,7 +228,12 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
                     }
                 )
         }
-        .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
+        .onReceive(AnchoredAnimationManager.shared.framePublisher(for: id)) { animation in
+            if let animation, triggerButtonFrame == .zero {
+                triggerButtonFrame = animation.buttonFrame
+            }
+        }
+        .onReceive(AnchoredAnimationManager.shared.statePublisher(for: id)) { animation in
             if let animation {
                 setupAndLaunchAnimation(animation)
             }
@@ -235,29 +241,28 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
     }
 
     private func setupAndLaunchAnimation(_ animation: AnchoredAnimationManager.AnimationItem) {
-        if contentSize == .zero { return }
+        if contentSize == .zero || triggerButtonFrame == .zero { return }
 
-        if triggerButtonFrame == .zero { // initial setup, and contentSize is ready
-            DispatchQueue.main.async {
-                triggerButtonFrame = animation.buttonFrame
-                setHiddenState()
-            }
-        }
-
-        DispatchQueue.main.async {
+        semaphore.wait()
+        if let animation = AnchoredAnimationManager[id] {
             if animation.state == .growing {
+                setHiddenState()
                 withAnimation(params.animation) {
                     setDisplayedState()
                 } completion: {
                     AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
+                    semaphore.signal()
                 }
+
             } else if animation.state == .shrinking {
                 withAnimation(params.animation) {
                     setHiddenState()
                 } completion: {
-                    // let the manager know that the animation is finished, this means that transparant sheet can be dismissed
                     AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
+                    semaphore.signal()
                 }
+            } else {
+                semaphore.signal()
             }
         }
     }

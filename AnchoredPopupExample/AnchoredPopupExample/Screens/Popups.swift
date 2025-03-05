@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AnchoredPopup
 
 struct MainMenuView: View {
     var body: some View {
@@ -43,10 +44,13 @@ struct MainMenuView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 16)
 
-                ZStack{
+                ZStack {
                     Circle().foregroundStyle(.popupViolet)
                         .size(60)
                     Image(.cross)
+                }
+                .onTapGesture {
+                    AnchoredPopup.launchShrinkingAnimation(id: "main_menu")
                 }
             }
         }

@@ -10,8 +10,6 @@ import AnchoredPopup
 
 struct MainView: View {
 
-    @State var name = "Mike"
-
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {

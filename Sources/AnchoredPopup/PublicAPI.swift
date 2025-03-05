@@ -21,16 +21,12 @@ public extension View {
 
 /// convenience methods to open/close the popup manually from code
 public class AnchoredPopup {
-    @MainActor static func launchGrowingAnimation(id: String) {
-        Task {
-            await AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .growing)
-        }
+    @MainActor public static func launchGrowingAnimation(id: String) {
+        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .growing)
     }
 
-    @MainActor static func launchShrinkingAnimation(id: String) {
-        Task {
-            await AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
-        }
+    @MainActor public static func launchShrinkingAnimation(id: String) {
+        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
     }
 }
 
@@ -55,7 +51,7 @@ public enum AnchoredPopupBackground {
 
 public struct PopupParameters {
     var position: AnchoredPopupPosition = .screenRelative()
-    var animation: Animation = .easeOut(duration: 0.3)
+    var animation: Animation = .easeIn(duration: 0.3)
 
     /// Should close on tap anywhere inside the popup
     var closeOnTap: Bool = true

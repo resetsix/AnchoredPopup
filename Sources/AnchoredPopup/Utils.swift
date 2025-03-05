@@ -11,14 +11,7 @@ import SwiftUI
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 }
 
-extension View {
-    func fullTap(action: @escaping () -> Void) -> some View {
-        self.contentShape(Rectangle())
-            .onTapGesture {
-                action()
-            }
-    }
-}
+// MARK: - Frame getting
 
 struct ButtonFrameInfo: Equatable {
     let id: String
@@ -36,8 +29,10 @@ struct ButtonFramePreferenceKey: PreferenceKey {
     }
 }
 
+// MARK: - AnimatedBackgroundView
+
 struct AnimatedBackgroundView: View {
-    var id: String
+    @Binding var id: String
     var background: AnchoredPopupBackground
 
     @State private var animatableOpacity: CGFloat = 0
@@ -57,7 +52,7 @@ struct AnimatedBackgroundView: View {
         }
         .ignoresSafeArea()
         .opacity(animatableOpacity)
-        .onReceive(AnchoredAnimationManager.shared.publisher(for: id)) { animation in
+        .onReceive(AnchoredAnimationManager.shared.statePublisher(for: id)) { animation in
             if let animation {
                 setupAndLaunchAnimation(animation)
             }
@@ -82,5 +77,49 @@ struct AnimatedBackgroundView: View {
 
     private func setDisplayedState() {
         animatableOpacity = 1
+    }
+}
+
+// MARK: - IntRect
+
+struct IntRect: Equatable {
+    var midX, midY, width, height: Int
+    var floatMidX: CGFloat { CGFloat(midX) }
+    var floatMidY: CGFloat { CGFloat(midY) }
+    var floatWidth: CGFloat { CGFloat(width) }
+    var floatHeight: CGFloat { CGFloat(height) }
+
+    static let zero = IntRect(midX: 0, midY: 0, width: 0, height: 0)
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.midX == rhs.midX
+        && lhs.midY == rhs.midY
+        && lhs.width == rhs.width
+        && lhs.height == rhs.height
+    }
+}
+
+extension CGRect {
+    func toIntRect() -> IntRect {
+        IntRect(midX: Int(midX), midY: Int(midY), width: Int(width), height: Int(height))
+    }
+}
+
+struct IntSize: Equatable {
+    var width, height: Int
+    var floatWidth: CGFloat { CGFloat(width) }
+    var floatHeight: CGFloat { CGFloat(height) }
+
+    static let zero = IntSize(width: 0, height: 0)
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.width == rhs.width
+        && lhs.height == rhs.height
+    }
+}
+
+extension CGSize {
+    func toIntSize() -> IntSize {
+        IntSize(width: Int(width), height: Int(height))
     }
 }

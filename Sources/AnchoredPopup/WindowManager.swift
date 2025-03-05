@@ -22,9 +22,7 @@ final class WindowManager {
         window.backgroundColor = .clear
         let root = content()
             .environment(\.anchoredPopupDismiss) {
-                Task {
-                    await AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
-                }
+                AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
             }
         let controller = isPassthrough ? UIPassthroughVC(rootView: root) : UIHostingController(rootView: root)
         controller.view.backgroundColor = .clear
