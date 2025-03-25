@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5B1858D62D51FD3A00625A0F /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1858D52D51FD3A00625A0F /* AnchoredPopup */; };
 		5B4929972D673CC9002D045E /* ChakraPetch-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */; };
+		5B4DBAD32D92F74A0067A006 /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B4DBAD22D92F74A0067A006 /* AnchoredPopup */; };
 		5B87F2BB2D3FAE7600A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2BA2D3FAE7600A1D1FA /* AnchoredPopup */; };
 		5B87F2BE2D3FAEE400A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2BD2D3FAEE400A1D1FA /* AnchoredPopup */; };
 		5B87F2C12D3FB04A00A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2C02D3FB04A00A1D1FA /* AnchoredPopup */; };
@@ -32,7 +33,6 @@
 
 /* Begin PBXFileReference section */
 		5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Light.ttf"; sourceTree = "<group>"; };
-		5B4DBACE2D92F0CA0067A006 /* AnchoredPopup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AnchoredPopup; path = ../AnchoredPopup; sourceTree = SOURCE_ROOT; };
 		5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnchoredPopupExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BACA4362D64808A0093E0CF /* ChakraPetch-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Medium.ttf"; sourceTree = "<group>"; };
 		5BACA4372D64808A0093E0CF /* ChakraPetch-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Regular.ttf"; sourceTree = "<group>"; };
@@ -60,6 +60,7 @@
 				5B1858D62D51FD3A00625A0F /* AnchoredPopup in Frameworks */,
 				5B87F2BE2D3FAEE400A1D1FA /* AnchoredPopup in Frameworks */,
 				5BACA4352D64806C0093E0CF /* AnchoredPopup in Frameworks */,
+				5B4DBAD32D92F74A0067A006 /* AnchoredPopup in Frameworks */,
 				5B87F2C12D3FB04A00A1D1FA /* AnchoredPopup in Frameworks */,
 				5BB5D7002D647EC900D26B4D /* AnchoredPopup in Frameworks */,
 			);
@@ -71,7 +72,6 @@
 		5B87F2992D3FA2B300A1D1FA = {
 			isa = PBXGroup;
 			children = (
-				5B4DBACE2D92F0CA0067A006 /* AnchoredPopup */,
 				5BACA4482D64808A0093E0CF /* AnchoredPopupExample */,
 				5B87F2A32D3FA2B300A1D1FA /* Products */,
 			);
@@ -163,6 +163,7 @@
 				5B1858D52D51FD3A00625A0F /* AnchoredPopup */,
 				5BB5D6FF2D647EC900D26B4D /* AnchoredPopup */,
 				5BACA4342D64806C0093E0CF /* AnchoredPopup */,
+				5B4DBAD22D92F74A0067A006 /* AnchoredPopup */,
 			);
 			productName = AnchoredPopupExample;
 			productReference = 5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */;
@@ -193,6 +194,7 @@
 			mainGroup = 5B87F2992D3FA2B300A1D1FA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				5B4DBAD12D92F74A0067A006 /* XCLocalSwiftPackageReference "../../@AnchoredPopup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B87F2A32D3FA2B300A1D1FA /* Products */;
@@ -451,8 +453,19 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		5B4DBAD12D92F74A0067A006 /* XCLocalSwiftPackageReference "../../@AnchoredPopup" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../@AnchoredPopup";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		5B1858D52D51FD3A00625A0F /* AnchoredPopup */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnchoredPopup;
+		};
+		5B4DBAD22D92F74A0067A006 /* AnchoredPopup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AnchoredPopup;
 		};
