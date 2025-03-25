@@ -243,23 +243,44 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
     private func setupAndLaunchAnimation(_ animation: AnchoredAnimationManager.AnimationItem) {
         if contentSize == .zero || triggerButtonFrame == .zero { return }
 
+        print(animation.state)
         semaphore.wait()
         if let animation = AnchoredAnimationManager[id] {
             if animation.state == .growing {
                 setHiddenState()
-                withAnimation(params.animation) {
-                    setDisplayedState()
-                } completion: {
-                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
-                    semaphore.signal()
-                }
 
+                if #available(iOS 17.0, *) {
+                    withAnimation(params.animation) {
+                        setDisplayedState()
+                    } completion: {
+                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
+                        semaphore.signal()
+                    }
+                } else {
+                    withAnimation(params.animation) {
+                        setDisplayedState()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
+                        semaphore.signal()
+                    }
+                }
             } else if animation.state == .shrinking {
-                withAnimation(params.animation) {
-                    setHiddenState()
-                } completion: {
-                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
-                    semaphore.signal()
+                if #available(iOS 17.0, *) {
+                    withAnimation(params.animation) {
+                        setHiddenState()
+                    } completion: {
+                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
+                        semaphore.signal()
+                    }
+                } else {
+                    withAnimation(params.animation) {
+                        setHiddenState()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
+                        semaphore.signal()
+                    }
                 }
             } else {
                 semaphore.signal()
@@ -328,3 +349,24 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
         }
     }
 }
+
+//func withAnimation(_ animation: Animation, closure: ()->(), completion: @escaping ()->()) {
+//    if #available(iOS 17.0, *) {
+//        withAnimation(animation) {
+//            //DispatchQueue.main.async {
+//                closure()
+//            //}
+//        } completion: {
+//            completion()
+//        }
+//    } else {
+//        withAnimation(animation) {
+//            //DispatchQueue.main.async {
+//                closure()
+//            //}
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+//            completion()
+//        }
+//    }
+//}

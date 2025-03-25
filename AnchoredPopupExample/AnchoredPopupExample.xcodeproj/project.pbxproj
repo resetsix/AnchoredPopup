@@ -32,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Light.ttf"; sourceTree = "<group>"; };
+		5B4DBACE2D92F0CA0067A006 /* AnchoredPopup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AnchoredPopup; path = ../AnchoredPopup; sourceTree = SOURCE_ROOT; };
 		5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnchoredPopupExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BACA4362D64808A0093E0CF /* ChakraPetch-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Medium.ttf"; sourceTree = "<group>"; };
 		5BACA4372D64808A0093E0CF /* ChakraPetch-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChakraPetch-Regular.ttf"; sourceTree = "<group>"; };
@@ -70,8 +71,8 @@
 		5B87F2992D3FA2B300A1D1FA = {
 			isa = PBXGroup;
 			children = (
+				5B4DBACE2D92F0CA0067A006 /* AnchoredPopup */,
 				5BACA4482D64808A0093E0CF /* AnchoredPopupExample */,
-				5B87F2B62D3FAE1100A1D1FA /* Frameworks */,
 				5B87F2A32D3FA2B300A1D1FA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -82,13 +83,6 @@
 				5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		5B87F2B62D3FAE1100A1D1FA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5BACA43B2D64808A0093E0CF /* Fonts */ = {
@@ -199,7 +193,6 @@
 			mainGroup = 5B87F2992D3FA2B300A1D1FA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5BACA4332D64806C0093E0CF /* XCLocalSwiftPackageReference "../../AnchoredPopup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B87F2A32D3FA2B300A1D1FA /* Products */;
@@ -384,13 +377,17 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = exyte.AnchoredPopupExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exyte.AnchoredPopupExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -414,13 +411,17 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = exyte.AnchoredPopupExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exyte.AnchoredPopupExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -449,13 +450,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		5BACA4332D64806C0093E0CF /* XCLocalSwiftPackageReference "../../AnchoredPopup" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../AnchoredPopup;
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		5B1858D52D51FD3A00625A0F /* AnchoredPopup */ = {
