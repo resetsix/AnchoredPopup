@@ -148,7 +148,7 @@ struct Popup: View {
 
 To try AnchoredPopup examples:
 - Clone the repo `https://github.com/exyte/AnchoredPopup.git`
-- Open `AnchoredPopupExample/AnchoredPopupExample.xcodeproj`
+- Open `AnchoredPopupExample.xcodeproj`
 - Try it!
 
 ## Installation
