@@ -7,9 +7,15 @@
 
 import SwiftUI
 
+#if compiler(>=6.0)
 extension String: @retroactive Identifiable {
     public var id: String { self }
 }
+#else
+extension String: Identifiable {
+    public var id: String { self }
+}
+#endif
 
 extension View {
     func greedyWidth() -> some View {

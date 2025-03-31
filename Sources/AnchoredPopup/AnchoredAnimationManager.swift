@@ -187,6 +187,7 @@ struct TriggerButton<V>: ViewModifier where V: View {
     }
 }
 
+@MainActor
 fileprivate struct AnchoredAnimationView<V>: View where V: View {
     var id: String
     var params: PopupParameters
@@ -243,7 +244,6 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
     private func setupAndLaunchAnimation(_ animation: AnchoredAnimationManager.AnimationItem) {
         if contentSize == .zero || triggerButtonFrame == .zero { return }
 
-        print(animation.state)
         semaphore.wait()
         if let animation = AnchoredAnimationManager[id] {
             if animation.state == .growing {
@@ -349,24 +349,3 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
         }
     }
 }
-
-//func withAnimation(_ animation: Animation, closure: ()->(), completion: @escaping ()->()) {
-//    if #available(iOS 17.0, *) {
-//        withAnimation(animation) {
-//            //DispatchQueue.main.async {
-//                closure()
-//            //}
-//        } completion: {
-//            completion()
-//        }
-//    } else {
-//        withAnimation(animation) {
-//            //DispatchQueue.main.async {
-//                closure()
-//            //}
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//            completion()
-//        }
-//    }
-//}

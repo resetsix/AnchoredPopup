@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,7 @@
 		5B4929972D673CC9002D045E /* ChakraPetch-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B4929962D673CC9002D045E /* ChakraPetch-Light.ttf */; };
 		5B4D04F82D92F9A8005262A1 /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B4D04F72D92F9A8005262A1 /* AnchoredPopup */; };
 		5B4DBAD32D92F74A0067A006 /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B4DBAD22D92F74A0067A006 /* AnchoredPopup */; };
+		5B55B9D52D9A6E71004A31C0 /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B55B9D42D9A6E71004A31C0 /* AnchoredPopup */; };
 		5B87F2BB2D3FAE7600A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2BA2D3FAE7600A1D1FA /* AnchoredPopup */; };
 		5B87F2BE2D3FAEE400A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2BD2D3FAEE400A1D1FA /* AnchoredPopup */; };
 		5B87F2C12D3FB04A00A1D1FA /* AnchoredPopup in Frameworks */ = {isa = PBXBuildFile; productRef = 5B87F2C02D3FB04A00A1D1FA /* AnchoredPopup */; };
@@ -63,6 +64,7 @@
 				5BACA4352D64806C0093E0CF /* AnchoredPopup in Frameworks */,
 				5B4DBAD32D92F74A0067A006 /* AnchoredPopup in Frameworks */,
 				5B87F2C12D3FB04A00A1D1FA /* AnchoredPopup in Frameworks */,
+				5B55B9D52D9A6E71004A31C0 /* AnchoredPopup in Frameworks */,
 				5BB5D7002D647EC900D26B4D /* AnchoredPopup in Frameworks */,
 				5B4D04F82D92F9A8005262A1 /* AnchoredPopup in Frameworks */,
 			);
@@ -167,6 +169,7 @@
 				5BACA4342D64806C0093E0CF /* AnchoredPopup */,
 				5B4DBAD22D92F74A0067A006 /* AnchoredPopup */,
 				5B4D04F72D92F9A8005262A1 /* AnchoredPopup */,
+				5B55B9D42D9A6E71004A31C0 /* AnchoredPopup */,
 			);
 			productName = AnchoredPopupExample;
 			productReference = 5B87F2A22D3FA2B300A1D1FA /* AnchoredPopupExample.app */;
@@ -188,6 +191,7 @@
 				};
 			};
 			buildConfigurationList = 5B87F29D2D3FA2B300A1D1FA /* Build configuration list for PBXProject "AnchoredPopupExample" */;
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -197,9 +201,8 @@
 			mainGroup = 5B87F2992D3FA2B300A1D1FA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5B4D04F62D92F9A8005262A1 /* XCLocalSwiftPackageReference "../../AnchoredPopup" */,
+				5B55B9D32D9A6E71004A31C0 /* XCLocalSwiftPackageReference "../../AnchoredPopup" */,
 			);
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B87F2A32D3FA2B300A1D1FA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -368,7 +371,6 @@
 		5B87F2B12D3FA2B400A1D1FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -382,7 +384,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -402,7 +404,6 @@
 		5B87F2B22D3FA2B400A1D1FA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -416,7 +417,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -457,7 +458,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		5B4D04F62D92F9A8005262A1 /* XCLocalSwiftPackageReference "../../AnchoredPopup" */ = {
+		5B55B9D32D9A6E71004A31C0 /* XCLocalSwiftPackageReference "../../AnchoredPopup" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../AnchoredPopup;
 		};
@@ -473,6 +474,10 @@
 			productName = AnchoredPopup;
 		};
 		5B4DBAD22D92F74A0067A006 /* AnchoredPopup */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnchoredPopup;
+		};
+		5B55B9D42D9A6E71004A31C0 /* AnchoredPopup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AnchoredPopup;
 		};
