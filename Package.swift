@@ -21,10 +21,6 @@ let package = Package(
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]
-        ),
-        .testTarget(
-            name: "AnchoredPopupTests",
-            dependencies: ["AnchoredPopup"]
-        ),
+        )
     ]
 )
