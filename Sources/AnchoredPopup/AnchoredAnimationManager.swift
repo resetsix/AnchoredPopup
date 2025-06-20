@@ -166,7 +166,7 @@ struct TriggerButton<V>: ViewModifier where V: View {
             )
             .onReceive(AnchoredAnimationManager.shared.statePublisher(for: id)) { animation in
                 if animation?.state == .growing {
-                    WindowManager.openNewWindow(id: id, isPassthrough: params.isPassthrough) {
+                    WindowManager.openNewWindow(id: id, closeOnTapOutside: params.closeOnTapOutside, isPassthrough: params.isPassthrough) {
                         ZStack {
                             AnimatedBackgroundView(id: $id, background: params.background)
                                 .simultaneousGesture(
@@ -245,46 +245,44 @@ fileprivate struct AnchoredAnimationView<V>: View where V: View {
         if contentSize == .zero || triggerButtonFrame == .zero { return }
 
         semaphore.wait()
-        if let animation = AnchoredAnimationManager[id] {
-            if animation.state == .growing {
-                setHiddenState()
+        if animation.state == .growing {
+            setHiddenState()
 
-                if #available(iOS 17.0, *) {
-                    withAnimation(params.animation) {
-                        setDisplayedState()
-                    } completion: {
-                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
-                        semaphore.signal()
-                    }
-                } else {
-                    withAnimation(params.animation) {
-                        setDisplayedState()
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
-                        semaphore.signal()
-                    }
-                }
-            } else if animation.state == .shrinking {
-                if #available(iOS 17.0, *) {
-                    withAnimation(params.animation) {
-                        setHiddenState()
-                    } completion: {
-                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
-                        semaphore.signal()
-                    }
-                } else {
-                    withAnimation(params.animation) {
-                        setHiddenState()
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
-                        semaphore.signal()
-                    }
+            if #available(iOS 17.0, *) {
+                withAnimation(params.animation) {
+                    setDisplayedState()
+                } completion: {
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
+                    semaphore.signal()
                 }
             } else {
-                semaphore.signal()
+                withAnimation(params.animation) {
+                    setDisplayedState()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .displayed)
+                    semaphore.signal()
+                }
             }
+        } else if animation.state == .shrinking {
+            if #available(iOS 17.0, *) {
+                withAnimation(params.animation) {
+                    setHiddenState()
+                } completion: {
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
+                    semaphore.signal()
+                }
+            } else {
+                withAnimation(params.animation) {
+                    setHiddenState()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .hidden)
+                    semaphore.signal()
+                }
+            }
+        } else {
+            semaphore.signal()
         }
     }
 

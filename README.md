@@ -11,7 +11,7 @@
 
 <p><h1 align="left">Anchored Popup</h1></p>
 
-<p><h4>Anchored Popup grows "out" of a trigger view, anchoring to a UnitPoint of the trigger, written with SwiftUI</h4></p>
+<p><h4>Anchored Popup grows "out" of a trigger view (similar to Hero animation), anchoring to a UnitPoint of the trigger, written with SwiftUI</h4></p>
 
 ![](https://img.shields.io/github/v/tag/exyte/anchoredPopup?label=Version)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fexyte%2FAnchoredPopup%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/exyte/AnchoredPopup)

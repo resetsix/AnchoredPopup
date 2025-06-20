@@ -10,21 +10,21 @@ import SwiftUI
 @MainActor
 final class WindowManager {
 	static let shared = WindowManager()
-    private var windows: [String: UIWindow] = [:]
+    var windows: [String: UIWindow] = [:]
 
-    static func openNewWindow<Content: View>(id: String, isPassthrough: Bool, content: ()->Content) {
+    static func openNewWindow<Content: View>(id: String, closeOnTapOutside: Bool, isPassthrough: Bool, content: ()->Content) {
 		guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
 			print("No valid scene available")
 			return
 		}
 
-        let window = isPassthrough ? UIPassthroughWindow(windowScene: scene) : UIWindow(windowScene: scene)
+        let window = UIPassthroughWindow(windowScene: scene, id: id, closeOnTapOutside: closeOnTapOutside, isPassthrough: isPassthrough)
         window.backgroundColor = .clear
         let root = content()
             .environment(\.anchoredPopupDismiss) {
                 AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
             }
-        let controller = isPassthrough ? UIPassthroughVC(rootView: root) : UIHostingController(rootView: root)
+        let controller = UIHostingController(rootView: root)
         controller.view.backgroundColor = .clear
         window.rootViewController = controller
 		window.windowLevel = .alert + 1
@@ -39,7 +39,21 @@ final class WindowManager {
 }
 
 class UIPassthroughWindow: UIWindow {
+    var id: String
+    var closeOnTapOutside: Bool
+    var isPassthrough: Bool
 
+    init(windowScene: UIWindowScene, id: String, closeOnTapOutside: Bool, isPassthrough: Bool) {
+        self.id = id
+        self.closeOnTapOutside = closeOnTapOutside
+        self.isPassthrough = isPassthrough
+        super.init(windowScene: windowScene)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let vc = self.rootViewController {
             vc.view.layoutSubviews() // otherwise the frame is as if the popup is still outside the screen
@@ -48,7 +62,13 @@ class UIPassthroughWindow: UIWindow {
                 return vc.view
             }
         }
-        return nil // pass to next window
+        if closeOnTapOutside {
+            AnchoredAnimationManager.shared.changeStateForAnimation(for: id, state: .shrinking)
+        }
+        if isPassthrough {
+            return nil // pass to next window
+        }
+        return self.rootViewController?.view
     }
 
     private func isTouchInsideSubview(point: CGPoint, vc: UIView) -> UIView? {

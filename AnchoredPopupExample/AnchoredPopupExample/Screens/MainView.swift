@@ -29,6 +29,7 @@ struct MainView: View {
                             .background(.none)
                             .isBackgroundPassthrough(true)
                             .closeOnTap(false)
+                            .closeOnTapOutside(true)
                     }
                 
                 Spacer()
@@ -43,6 +44,7 @@ struct MainView: View {
                     } customize: {
                         $0.position(.screenRelative())
                             .closeOnTap(false)
+                            .closeOnTapOutside(true)
                     }
             }
             .padding(16)
